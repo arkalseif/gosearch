@@ -1,0 +1,10 @@
+- name: Set up Go
+  uses: actions/setup-go@v5
+  with:
+    go-version: '1.22'   # O la versión que uses
+
+- name: Build gosearch
+  run: go build -o gosearch .
+
+- name: Run gosearch for email
+  run: ./gosearch -u andreileonsalas@gmail.com
