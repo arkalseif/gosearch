@@ -2,6 +2,15 @@ name: On Demand Search for Email
 
 on:
   workflow_dispatch:
+    inputs:
+      email:
+        description: 'Email a buscar'
+        required: true
+        type: string
+      breach_api_key:
+        description: 'API Key de BreachDirectory (opcional)'
+        required: false
+        type: string
 
 jobs:
   search_email:
@@ -15,5 +24,10 @@ jobs:
           go-version: '1.22'
       - name: Build gosearch
         run: go build -o gosearch .
-      - name: Run gosearch for email
-        run: ./gosearch -u andreileonsalas@gmail.com
+      - name: Run gosearch for email (más preciso)
+        run: |
+          if [ -z "${{ github.event.inputs.breach_api_key }}" ]; then
+            ./gosearch -u "${{ github.event.inputs.email }}" --no-false-positives
+          else
+            ./gosearch -u "${{ github.event.inputs.email }}" -b "${{ github.event.inputs.breach_api_key }}" --no-false-positives
+          fi
